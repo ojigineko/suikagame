@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スイカゲーム</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>スイカゲーム</h1>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="400" height="600"></canvas>
+    </div>
+    <div class="instructions">
+        <p>マウスを動かしてフルーツの位置を決め、クリックして落とします。同じフルーツを組み合わせて大きなフルーツを作りましょう！</p>
+        <p>「P」キーでゲームを一時停止できます。</p>
+    </div>
+    <div id="log-container">
+        <h3>ゲームログ</h3>
+        <div id="game-log"></div>
+    </div>
+
+    <script src="js/logger.js"></script>
+    <script src="js/error-logger.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html> 
