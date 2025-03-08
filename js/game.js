@@ -45,7 +45,7 @@ class SuikaGame {
         this.containerLeft = 0;
         this.containerRight = this.containerWidth;
         this.containerBottom = this.containerHeight;
-        this.dropZoneHeight = 150;
+        this.dropZoneHeight = 100;
         
         // 画像の読み込み
         this.loadImages();
