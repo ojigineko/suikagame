@@ -14,16 +14,16 @@ class SuikaGame {
         // フルーツの種類定義
         this.fruitTypes = [
             { name: "子犬", radius: 20, color: "#FF0000", points: 1, image: "cool-dog.png" },
-            { name: "小型犬", radius: 30, color: "#FF3366", points: 2, image: "cool-dog.png" },
-            { name: "中型犬", radius: 40, color: "#9400D3", points: 3, image: "cool-dog.png" },
+            { name: "小型犬", radius: 30, color: "#FF3366", points: 2, image: "jd.png" },
+            { name: "中型犬", radius: 40, color: "#9400D3", points: 3, image: "nozomu.png" },
             { name: "大型犬", radius: 50, color: "#FFA500", points: 4, image: "cool-dog.png" },
-            { name: "特大犬", radius: 60, color: "#FF8C00", points: 5, image: "cool-dog.png" },
-            { name: "超大型犬", radius: 70, color: "#00AA00", points: 6, image: "cool-dog.png" },
+            { name: "特大犬", radius: 60, color: "#FF8C00", points: 5, image: "jd.png" },
+            { name: "超大型犬", radius: 70, color: "#00AA00", points: 6, image: "nozomu.png" },
             { name: "巨大犬", radius: 80, color: "#ADFF2F", points: 7, image: "cool-dog.png" },
-            { name: "超巨大犬", radius: 90, color: "#FFC0CB", points: 8, image: "cool-dog.png" },
-            { name: "伝説の犬", radius: 100, color: "#FFD700", points: 9, image: "cool-dog.png" },
+            { name: "超巨大犬", radius: 90, color: "#FFC0CB", points: 8, image: "jd.png" },
+            { name: "伝説の犬", radius: 100, color: "#FFD700", points: 9, image: "nozomu.png" },
             { name: "神話の犬", radius: 110, color: "#32CD32", points: 10, image: "cool-dog.png" },
-            { name: "犬の王", radius: 120, color: "#008000", points: 11, image: "cool-dog.png" }
+            { name: "犬の王", radius: 120, color: "#008000", points: 11, image: "jd.png" }
         ];
         
         // ゲーム変数
@@ -71,22 +71,48 @@ class SuikaGame {
      * フルーツ画像を読み込む
      */
     loadImages() {
-        const dogImage = new Image();
-        dogImage.onload = () => {
-            this.imagesLoaded = true;
-            gameLogger.info('犬の画像が読み込まれました');
+        // 画像ファイルのリスト
+        const imageFiles = ['cool-dog.png', 'jd.png', 'nozomu.png'];
+        let loadedCount = 0;
+        const totalImages = imageFiles.length;
+        
+        // 各画像を読み込む
+        imageFiles.forEach((file, index) => {
+            const img = new Image();
+            img.onload = () => {
+                loadedCount++;
+                gameLogger.info(`画像 ${file} が読み込まれました (${loadedCount}/${totalImages})`);
+                
+                if (loadedCount === totalImages) {
+                    this.imagesLoaded = true;
+                    gameLogger.info('すべての画像が読み込まれました');
+                }
+            };
+            img.onerror = () => {
+                gameLogger.error(`画像 ${file} の読み込みに失敗しました`);
+                loadedCount++;
+                
+                if (loadedCount === totalImages) {
+                    if (loadedCount === 0) {
+                        this.imagesLoaded = false;
+                    } else {
+                        this.imagesLoaded = true;
+                        gameLogger.warning('一部の画像が読み込めませんでしたが、利用可能な画像でゲームを続行します');
+                    }
+                }
+            };
+            img.src = `./images/${file}`;
             
-            // すべてのフルーツタイプに同じ画像を使用
-            for (let i = 0; i < this.fruitTypes.length; i++) {
-                this.fruitImages[i] = dogImage;
-            }
-        };
-        dogImage.onerror = () => {
-            gameLogger.error('犬の画像の読み込みに失敗しました');
-            this.imagesLoaded = false;
-        };
-        // 画像のパスを修正 - 相対パスを使用
-        dogImage.src = './images/cool-dog.png';
+            // 画像をリストに保存
+            this.fruitImages[index] = img;
+        });
+        
+        // フルーツタイプに画像を割り当て
+        for (let i = 0; i < this.fruitTypes.length; i++) {
+            // 3種類の画像を順番に割り当て（循環）
+            const imageIndex = i % totalImages;
+            this.fruitTypes[i].imageIndex = imageIndex;
+        }
         
         // バックアップとして、画像が読み込めない場合のフォールバック処理
         setTimeout(() => {
@@ -467,45 +493,41 @@ class SuikaGame {
         this.ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
         this.ctx.fill();
         
-        if (this.imagesLoaded && this.fruitImages[fruit.type]) {
-            // 画像を円形にくり抜いて描画
-            const img = this.fruitImages[fruit.type];
-            const size = fruit.radius * 2;
+        if (this.imagesLoaded) {
+            // フルーツタイプに対応する画像インデックスを取得
+            const imageIndex = this.fruitTypes[fruit.type].imageIndex;
+            const img = this.fruitImages[imageIndex];
             
-            // 円形のクリッピングパスを作成
-            this.ctx.save();
-            this.ctx.beginPath();
-            this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
-            this.ctx.closePath();
-            this.ctx.clip();
-            
-            // 画像を描画
-            this.ctx.drawImage(img, fruit.x - fruit.radius, fruit.y - fruit.radius, size, size);
-            
-            // クリッピングをリセット
-            this.ctx.restore();
-            
-            // 円の枠線を描画
-            this.ctx.beginPath();
-            this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
-            this.ctx.strokeStyle = "#000";
-            this.ctx.lineWidth = 2;
-            this.ctx.stroke();
+            if (img && img.complete) {
+                // 画像を円形にくり抜いて描画
+                const size = fruit.radius * 2;
+                
+                // 円形のクリッピングパスを作成
+                this.ctx.save();
+                this.ctx.beginPath();
+                this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
+                this.ctx.closePath();
+                this.ctx.clip();
+                
+                // 画像を描画
+                this.ctx.drawImage(img, fruit.x - fruit.radius, fruit.y - fruit.radius, size, size);
+                
+                // クリッピングをリセット
+                this.ctx.restore();
+                
+                // 円の枠線を描画
+                this.ctx.beginPath();
+                this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
+                this.ctx.strokeStyle = "#000";
+                this.ctx.lineWidth = 2;
+                this.ctx.stroke();
+            } else {
+                // 画像が読み込まれていない場合はデフォルトの円を描画
+                this.drawDefaultFruit(fruit);
+            }
         } else {
-            // 画像が読み込まれていない場合は円を描画
-            this.ctx.beginPath();
-            this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
-            this.ctx.fillStyle = fruit.color;
-            this.ctx.fill();
-            this.ctx.strokeStyle = "#000";
-            this.ctx.lineWidth = 2;
-            this.ctx.stroke();
-            
-            // ハイライトの描画
-            this.ctx.beginPath();
-            this.ctx.arc(fruit.x - fruit.radius * 0.3, fruit.y - fruit.radius * 0.3, fruit.radius * 0.3, 0, Math.PI * 2);
-            this.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-            this.ctx.fill();
+            // 画像が読み込まれていない場合はデフォルトの円を描画
+            this.drawDefaultFruit(fruit);
         }
         
         // フルーツ名の描画
@@ -513,6 +535,26 @@ class SuikaGame {
         this.ctx.font = `${Math.max(12, fruit.radius / 3)}px Arial`;
         this.ctx.textAlign = "center";
         this.ctx.fillText(this.fruitTypes[fruit.type].name, fruit.x, fruit.y + 5);
+    }
+    
+    /**
+     * デフォルトのフルーツ（円）を描画
+     * @param {Object} fruit - 描画するフルーツオブジェクト
+     */
+    drawDefaultFruit(fruit) {
+        this.ctx.beginPath();
+        this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
+        this.ctx.fillStyle = fruit.color;
+        this.ctx.fill();
+        this.ctx.strokeStyle = "#000";
+        this.ctx.lineWidth = 2;
+        this.ctx.stroke();
+        
+        // ハイライトの描画
+        this.ctx.beginPath();
+        this.ctx.arc(fruit.x - fruit.radius * 0.3, fruit.y - fruit.radius * 0.3, fruit.radius * 0.3, 0, Math.PI * 2);
+        this.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+        this.ctx.fill();
     }
     
     /**
