@@ -45,7 +45,7 @@ class SuikaGame {
         this.containerLeft = 0;
         this.containerRight = this.containerWidth;
         this.containerBottom = this.containerHeight;
-        this.dropZoneHeight = 100;
+        this.dropZoneHeight = 150;
         
         // 画像の読み込み
         this.loadImages();
@@ -385,7 +385,7 @@ class SuikaGame {
         this.ctx.fillStyle = "#FF6B6B";
         this.ctx.font = "14px Arial";
         this.ctx.textAlign = "center";
-        this.ctx.fillText("危険ゾーン - フルーツがこの線より上に積み上がるとゲームオーバー", this.canvas.width / 2, this.dropZoneHeight - 10);
+        this.ctx.fillText("危険ゾーン - この線より上に犬が積み上がるとゲームオーバー", this.canvas.width / 2, this.dropZoneHeight - 10);
         
         // マージエフェクトの描画
         for (const effect of this.mergeEffects) {
