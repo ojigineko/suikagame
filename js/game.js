@@ -16,14 +16,14 @@ class SuikaGame {
             { name: "子犬", radius: 20, color: "#FF0000", points: 1, image: "cool-dog.png" },
             { name: "小型犬", radius: 30, color: "#FF3366", points: 2, image: "jd.png" },
             { name: "中型犬", radius: 40, color: "#9400D3", points: 3, image: "nozomu.png" },
-            { name: "大型犬", radius: 50, color: "#FFA500", points: 4, image: "cool-dog.png" },
-            { name: "特大犬", radius: 60, color: "#FF8C00", points: 5, image: "jd.png" },
-            { name: "超大型犬", radius: 70, color: "#00AA00", points: 6, image: "nozomu.png" },
-            { name: "巨大犬", radius: 80, color: "#ADFF2F", points: 7, image: "cool-dog.png" },
-            { name: "超巨大犬", radius: 90, color: "#FFC0CB", points: 8, image: "jd.png" },
-            { name: "伝説の犬", radius: 100, color: "#FFD700", points: 9, image: "nozomu.png" },
-            { name: "神話の犬", radius: 110, color: "#32CD32", points: 10, image: "cool-dog.png" },
-            { name: "犬の王", radius: 120, color: "#008000", points: 11, image: "jd.png" }
+            { name: "大型犬", radius: 50, color: "#FFA500", points: 4, image: "asasann.png" },
+            { name: "特大犬", radius: 60, color: "#FF8C00", points: 5, image: "ojigineko.png" },
+            { name: "超大型犬", radius: 70, color: "#00AA00", points: 6, image: "cool-dog.png" },
+            { name: "巨大犬", radius: 80, color: "#ADFF2F", points: 7, image: "jd.png" },
+            { name: "超巨大犬", radius: 90, color: "#FFC0CB", points: 8, image: "nozomu.png" },
+            { name: "伝説の犬", radius: 100, color: "#FFD700", points: 9, image: "asasann.png" },
+            { name: "神話の犬", radius: 110, color: "#32CD32", points: 10, image: "ojigineko.png" },
+            { name: "犬の王", radius: 120, color: "#008000", points: 11, image: "cool-dog.png" }
         ];
         
         // ゲーム変数
@@ -72,7 +72,7 @@ class SuikaGame {
      */
     loadImages() {
         // 画像ファイルのリスト
-        const imageFiles = ['cool-dog.png', 'jd.png', 'nozomu.png'];
+        const imageFiles = ['cool-dog.png', 'jd.png', 'nozomu.png', 'asasann.png', 'ojigineko.png'];
         let loadedCount = 0;
         const totalImages = imageFiles.length;
         
