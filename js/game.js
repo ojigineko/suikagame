@@ -468,10 +468,29 @@ class SuikaGame {
         this.ctx.fill();
         
         if (this.imagesLoaded && this.fruitImages[fruit.type]) {
-            // 画像を使用してフルーツを描画
+            // 画像を円形にくり抜いて描画
             const img = this.fruitImages[fruit.type];
             const size = fruit.radius * 2;
+            
+            // 円形のクリッピングパスを作成
+            this.ctx.save();
+            this.ctx.beginPath();
+            this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
+            this.ctx.closePath();
+            this.ctx.clip();
+            
+            // 画像を描画
             this.ctx.drawImage(img, fruit.x - fruit.radius, fruit.y - fruit.radius, size, size);
+            
+            // クリッピングをリセット
+            this.ctx.restore();
+            
+            // 円の枠線を描画
+            this.ctx.beginPath();
+            this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
+            this.ctx.strokeStyle = "#000";
+            this.ctx.lineWidth = 2;
+            this.ctx.stroke();
         } else {
             // 画像が読み込まれていない場合は円を描画
             this.ctx.beginPath();
